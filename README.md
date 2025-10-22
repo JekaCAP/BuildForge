@@ -3,4 +3,4 @@
 
 ---
 
-- [**Архитектура приложения и используемые паттерны**](https://excalidraw.com/#json=MhLUyAdrSzhHjAkqEHi6R,NQTKUj4_HmzFg5QgkIptJg) - нажми на меня и всё увидишь.
+- [**Архитектура приложения и используемые паттерны**](https://excalidraw.com/#json=mCdIh2g0Pt9uDpxXuT9ri,I8b2FDIXM6ETFSwSdy6UkQ) - нажми на меня и всё увидишь.
