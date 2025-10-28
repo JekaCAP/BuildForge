@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -23,33 +22,34 @@
     </properties>
 
     <dependencies>
+
         <!-- Spring Web для REST-контроллеров -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Jakarta Validation API для @NotNull и других валидаторов -->
+        <!-- Jakarta Validation API -->
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
         </dependency>
 
-        <!-- Swagger/OpenAPI аннотации для @Schema -->
+        <!-- Swagger/OpenAPI аннотации -->
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>
             <version>2.2.14</version>
         </dependency>
 
-        <!-- Поддержка JsonNullable -->
+        <!-- Jackson support for JsonNullable -->
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
             <version>0.2.5</version>
         </dependency>
 
-        <!-- Для @Generated -->
+        <!-- Jakarta Generated -->
         <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
@@ -59,7 +59,8 @@
 
     <build>
         <plugins>
-            <!-- 🧩 Генерация Java-кода из OpenAPI -->
+
+            <!-- OpenAPI Generator -->
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
@@ -72,9 +73,10 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <!-- Путь к openapi.yaml -->
                             <inputSpec>${project.basedir}/../api-specs/target/openapi/@typespec/openapi3/openapi.yaml</inputSpec>
-                            <output>${project.build.directory}/generated-sources/openapi</output>
+
+                            <!-- Генерация сразу в src/main/java внутри target -->
+                            <output>${project.build.directory}/generated-sources/openapi/src/main/java</output>
 
                             <!-- Пакеты -->
                             <apiPackage>ru.opensource.buildforge.generated.api</apiPackage>
@@ -83,20 +85,14 @@
 
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>
+
                             <configOptions>
-                                <!-- Убираем interfaceOnly -->
-                                <interfaceOnly>false</interfaceOnly>
-
-                                <!-- Используем Spring Boot 3 -->
-                                <useSpringBoot3>true</useSpringBoot3>
-
-                                <!-- Дата/время -->
-                                <dateLibrary>java8</dateLibrary>
-
                                 <!-- Генерация контроллеров с делегатами -->
                                 <delegatePattern>true</delegatePattern>
-
-                                <!-- Генерируем только нужные вспомогательные файлы -->
+                                <!-- Генерировать контроллеры полностью, не только интерфейсы -->
+                                <interfaceOnly>false</interfaceOnly>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <dateLibrary>java8</dateLibrary>
                                 <generateSupportingFiles>false</generateSupportingFiles>
                             </configOptions>
                         </configuration>
@@ -104,7 +100,7 @@
                 </executions>
             </plugin>
 
-            <!-- Добавляем сгенерированные файлы в source root -->
+            <!-- Добавляем generated-sources в source root -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -118,7 +114,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${project.build.directory}/generated-sources/openapi</source>
+                                <source>${project.build.directory}/generated-sources/openapi/src/main/java</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -137,4 +133,5 @@
 
         </plugins>
     </build>
+
 </project>
