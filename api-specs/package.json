@@ -1,0 +1,17 @@
+{
+  "name": "api-specs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build:openapi": "ts-node ./node_modules/@typespec/compiler/dist/cli.js src/main/typespec/main.tsp --emit openapi3:target/openapi"
+  },
+  "dependencies": {
+    "@typespec/compiler": "^1.5.0"
+  },
+  "devDependencies": {
+    "@typespec/http": "^1.5.0",
+    "@typespec/openapi3": "^1.5.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

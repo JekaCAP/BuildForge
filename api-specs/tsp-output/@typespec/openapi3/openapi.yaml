@@ -1,0 +1,355 @@
+openapi: 3.0.0
+info:
+  title: User Service
+  version: 0.0.0
+tags:
+  - name: Users
+  - name: Profiles
+  - name: UserBuilds
+paths:
+  /profiles:
+    post:
+      operationId: ProfileApi_createProfile
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponse'
+      tags:
+        - Profiles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProfileDto'
+  /profiles/{userId}:
+    get:
+      operationId: ProfileApi_getProfile
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponse'
+      tags:
+        - Profiles
+    put:
+      operationId: ProfileApi_updateProfile
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponse'
+      tags:
+        - Profiles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileDto'
+    delete:
+      operationId: ProfileApi_deleteProfile
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+      tags:
+        - Profiles
+  /user-builds:
+    post:
+      operationId: UserBuildApi_createUserBuild
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBuildResponse'
+      tags:
+        - UserBuilds
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserBuildDto'
+  /user-builds/user/{userId}:
+    get:
+      operationId: UserBuildApi_listUserBuildsByUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserBuildResponse'
+      tags:
+        - UserBuilds
+  /user-builds/{userBuildId}:
+    get:
+      operationId: UserBuildApi_getUserBuild
+      parameters:
+        - name: userBuildId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBuildResponse'
+      tags:
+        - UserBuilds
+    delete:
+      operationId: UserBuildApi_deleteUserBuild
+      parameters:
+        - name: userBuildId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+      tags:
+        - UserBuilds
+  /users:
+    post:
+      operationId: UserApi_createUser
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+  /users/{userId}:
+    get:
+      operationId: UserApi_getUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+      tags:
+        - Users
+    put:
+      operationId: UserApi_updateUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+    delete:
+      operationId: UserApi_deleteUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+      tags:
+        - Users
+  /users/{userId}/builds:
+    get:
+      operationId: UserApi_listUserBuilds
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserBuildResponse'
+      tags:
+        - Users
+components:
+  schemas:
+    CreateProfileDto:
+      type: object
+      properties:
+        avatar:
+          type: string
+        bio:
+          type: string
+        settings:
+          type: object
+      description: DTO для создания профиля
+    CreateUserBuildDto:
+      type: object
+      required:
+        - buildId
+      properties:
+        buildId:
+          type: string
+      description: DTO для создания связи пользователя с билдом
+    CreateUserDto:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        profile:
+          $ref: '#/components/schemas/CreateProfileDto'
+      description: DTO для создания пользователя
+    ProfileResponse:
+      type: object
+      properties:
+        avatar:
+          type: string
+        bio:
+          type: string
+        settings:
+          type: object
+      description: DTO для возврата профиля на фронт
+    RoleName:
+      type: string
+      enum:
+        - ROLE_USER
+        - ROLE_ADMIN
+      description: Роль пользователя в системе
+    UpdateProfileDto:
+      type: object
+      properties:
+        avatar:
+          type: string
+        bio:
+          type: string
+        settings:
+          type: object
+      description: DTO для обновления профиля
+    UpdateUserDto:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        profile:
+          $ref: '#/components/schemas/UpdateProfileDto'
+      description: DTO для обновления пользователя
+    UserBuildResponse:
+      type: object
+      required:
+        - id
+        - buildId
+        - createdAt
+      properties:
+        id:
+          type: string
+        buildId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      description: DTO для возврата билда пользователя на фронт
+    UserResponse:
+      type: object
+      required:
+        - id
+        - username
+        - createdAt
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleName'
+        profile:
+          $ref: '#/components/schemas/ProfileResponse'
+      description: DTO для возврата пользователю на фронт
