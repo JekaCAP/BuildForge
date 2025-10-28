@@ -6,12 +6,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.open.source</groupId>
-    <artifactId>library-construction</artifactId>
+    <artifactId>build-forge</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>user-service</module>
+        <module>api-specs</module>
     </modules>
 
     <properties>
@@ -21,6 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>3.0.6</spring.boot.version>
         <spring.cloud.version>2022.0.3</spring.cloud.version>
+        <openapi.generator.version>6.6.0</openapi.generator.version>
     </properties>
 
     <!-- Управление версиями зависимостей -->
