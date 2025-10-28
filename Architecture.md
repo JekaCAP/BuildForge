@@ -26,10 +26,10 @@ BuildForge — платформа для создания, тестирован�
 │ └─ Маршрутизация REST/gRPC
 │
 ├─ User Service
-│ ├─ PostgreSQL: user_db
-│ ├─ Таблицы: users, profiles, roles
-│ ├─ S3: хранение аватаров
-│ └─ Kafka: UserCreated, UserUpdated
+│   ├─ PostgreSQL: user_db
+│   ├─ Таблицы: users, profiles, roles (аватары могут храниться в base64 на раннем этапе)
+│   ├─ S3 (планируется для хранения файлов при масштабировании)
+│   └─ Kafka: UserCreated, UserUpdated (события слушают Build и Account сервисы для синхронизации профилей и владельцев билдов)
 │
 ├─ Game Service
 │ ├─ PostgreSQL: game_db
@@ -37,9 +37,12 @@ BuildForge — платформа для создания, тестирован�
 │ └─ REST/gRPC для Build Service
 │
 ├─ Build Service
-│ ├─ PostgreSQL: build_db
-│ ├─ Таблицы: builds, build_items
-│ └─ Kafka: BuildCreated, BuildUpdated
+│   ├─ PostgreSQL: build_db
+│   ├─ Таблицы: builds, build_items
+│   └─ Kafka: BuildCreated, BuildUpdated
+│
+│   ─ Примечание: на MVP этапе возможно объединение Build и Game сервисов в один модуль
+│   ─ для упрощения разработки и согласованной модели данных.
 │
 ├─ Account Service (опционально)
 │ ├─ PostgreSQL: account_db
@@ -61,16 +64,16 @@ BuildForge — платформа для создания, тестирован�
 
 ## Базы данных
 
-- Каждый сервис имеет свою БД для изоляции и независимого масштабирования.
-- Используется PostgreSQL + Flyway для миграций.
-- Возможна генерализация для read-only реплик для аналитики.
+- На старте используется **единый экземпляр PostgreSQL** с разделением по схемам (`user_schema`, `game_schema`, `build_schema`)
+для упрощения деплоя и настройки CI/CD.  
+- В дальнейшем возможен переход на **отдельные инстансы** для независимого масштабирования и отказоустойчивости.
 
 ---
 
 ## API & DTO
 
-- OpenAPI / TypeSpec для генерации DTO и фронтенд-клиентов.
-- Пример Build API:
+- OpenAPI / TypeSpec спецификации хранятся в директории `/api-specs` монорепозитория  
+- и используются для автогенерации DTO и клиентов (через Gradle task или CI pipeline).
 
 ```json
 GET /builds/{gameId}/{buildId}
@@ -92,13 +95,14 @@ Response:
   ]
 }
 ```
-- Гибкая структура items.attributes позволяет поддерживать разные игры и категории предметов.
+- Гибкость структуры `items.attributes` заключается в возможности хранить разные наборы атрибутов для разных игр.  
+  Например, в Dark Souls предмет имеет `{damage, weight}`, а в Diablo — `{attack_speed, rarity, socket_count}`.
 
 ---
 
 ## Security
 
-- **Cakewalk** для аутентификации и авторизации на Gateway
+- **Keycloak** для аутентификации и авторизации на Gateway
 - **JWT / OAuth2**, RBAC для фронта и микросервисов
 - **mTLS** между микросервисами (по желанию)
 
