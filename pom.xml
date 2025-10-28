@@ -13,6 +13,7 @@
     <modules>
         <module>user-service</module>
         <module>api-specs</module>
+        <module>api-generated</module>
     </modules>
 
     <properties>

@@ -84,11 +84,20 @@
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>
                             <configOptions>
-                                <interfaceOnly>true</interfaceOnly>
-                                <useTags>true</useTags>
-                                <skipDefaultInterface>true</skipDefaultInterface>
+                                <!-- Убираем interfaceOnly -->
+                                <interfaceOnly>false</interfaceOnly>
+
+                                <!-- Используем Spring Boot 3 -->
+                                <useSpringBoot3>true</useSpringBoot3>
+
+                                <!-- Дата/время -->
                                 <dateLibrary>java8</dateLibrary>
-                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+
+                                <!-- Генерация контроллеров с делегатами -->
+                                <delegatePattern>true</delegatePattern>
+
+                                <!-- Генерируем только нужные вспомогательные файлы -->
+                                <generateSupportingFiles>false</generateSupportingFiles>
                             </configOptions>
                         </configuration>
                     </execution>
