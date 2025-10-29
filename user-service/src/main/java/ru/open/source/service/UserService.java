@@ -17,7 +17,7 @@ public interface UserService {
 
     UserResponse create(CreateUserDto createUserDto);
 
-    UserResponse  update(UpdateUserDto updateUserDto);
+    UserResponse  update(UUID id, UpdateUserDto updateUserDto);
 
     UserResponse getById(UUID id);
 
