@@ -76,7 +76,7 @@
                             <inputSpec>${project.basedir}/../api-specs/target/openapi/@typespec/openapi3/openapi.yaml</inputSpec>
 
                             <!-- Генерация сразу в src/main/java внутри target -->
-                            <output>${project.build.directory}/generated-sources/openapi/src/main/java</output>
+                            <output>${project.build.directory}/generated-sources/openapi</output>
 
                             <!-- Пакеты -->
                             <apiPackage>ru.opensource.buildforge.generated.api</apiPackage>
