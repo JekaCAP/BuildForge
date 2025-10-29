@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.open.source.entity.User;
 import ru.open.source.mapper.UserMapper;
 import ru.open.source.repository.UserRepository;
 import ru.opensource.buildforge.generated.dto.CreateUserDto;
@@ -43,8 +44,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserResponse update(UpdateUserDto updateUserDto) {
-        return null;
+    public UserResponse update(UUID id, UpdateUserDto updateUserDto) {
+        User user = userRepository.getByIdOrThrow(id);
+
+        userMapper.updateUser(user, updateUserDto);
+
+        return userMapper.toUserResponse(user);
     }
 
     @Override
@@ -55,6 +60,5 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void delete(UUID id) {
-
     }
 }
