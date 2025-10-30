@@ -1,6 +1,6 @@
 package ru.open.source.service;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,15 +13,6 @@ import ru.opensource.buildforge.generated.dto.UserResponse;
 
 import java.util.UUID;
 
-/**
- * UserServiceImpl — описание класса.
- * <p>
- * TODO: добавить описание назначения и поведения класса.
- * </p>
- *
- * @author agent
- * @since 28.10.2025
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -53,12 +44,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserResponse getById(UUID id) {
-        return null;
+        var user = userRepository.getByIdOrThrow(id);
+        return userMapper.toUserResponse(user);
     }
 
     @Override
     @Transactional
     public void delete(UUID id) {
+        userRepository.deleteById(id);
     }
 }

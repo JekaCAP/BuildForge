@@ -9,22 +9,30 @@ import ru.opensource.buildforge.generated.dto.UpdateUserDto;
 import ru.opensource.buildforge.generated.dto.UserResponse;
 
 /**
- * UserMapper — описание интерфейса.
+ * Mapper для преобразования между сущностью {@link User} и DTO.
  * <p>
- * TODO: описать, какие обязанности реализует интерфейс.
+ * Предоставляет методы для конвертации данных при создании, обновлении и отображении пользователей.
  * </p>
  *
- * @author agent
- * @since 28.10.2025
+ * @author JekaCAP
  */
 @Mapper(componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         unmappedTargetPolicy = org.mapstruct.ReportingPolicy.IGNORE)
 public interface UserMapper {
 
+    /**
+     * Преобразует DTO создания события в сущность {@link User}.
+     */
     User toEntity(CreateUserDto userDto);
 
+    /**
+     * Преобразует сущность {@link User} в DTO для отображения.
+     */
     void updateUser(@MappingTarget User user, UpdateUserDto userDto);
 
+    /**
+     * Обновляет сущность {@link User} на основе данных из DTO обновления.
+     */
     UserResponse toUserResponse(User user);
 }
