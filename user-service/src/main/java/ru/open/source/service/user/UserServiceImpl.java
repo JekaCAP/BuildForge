@@ -1,4 +1,4 @@
-package ru.open.source.service;
+package ru.open.source.service.user;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

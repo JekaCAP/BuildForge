@@ -1,4 +1,4 @@
-package ru.open.source.service;
+package ru.open.source.service.user;
 
 import ru.opensource.buildforge.generated.dto.CreateUserDto;
 import ru.opensource.buildforge.generated.dto.UpdateUserDto;
