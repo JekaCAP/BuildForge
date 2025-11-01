@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +44,8 @@ import java.util.UUID;
 @Entity
 @RequiredArgsConstructor
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Table(name = "profiles")
 public class Profile {
 
@@ -63,4 +67,6 @@ public class Profile {
 
     @Column(columnDefinition = "jsonb")
     private String setting;
+
+    private ProfileStatus status;
 }

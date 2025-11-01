@@ -22,7 +22,7 @@ import ru.opensource.buildforge.generated.dto.UserResponse;
 public interface UserMapper {
 
     /**
-     * Преобразует DTO создания события в сущность {@link User}.
+     * Преобразует DTO создания юзера в сущность {@link User}.
      */
     User toEntity(CreateUserDto userDto);
 

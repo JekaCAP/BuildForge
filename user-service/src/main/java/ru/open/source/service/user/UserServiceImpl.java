@@ -1,11 +1,13 @@
-package ru.open.source.service;
+package ru.open.source.service.user;
 
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.open.source.entity.User;
+import ru.open.source.event.UserDeletedEvent;
 import ru.open.source.mapper.UserMapper;
+import ru.open.source.publisher.UserDeletedEventPublisher;
 import ru.open.source.repository.UserRepository;
 import ru.opensource.buildforge.generated.dto.CreateUserDto;
 import ru.opensource.buildforge.generated.dto.UpdateUserDto;
@@ -18,6 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private final UserDeletedEventPublisher deletedEventPublisher;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
@@ -54,5 +57,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(UUID id) {
         userRepository.deleteById(id);
+        deletedEventPublisher.publish(new UserDeletedEvent(id));
     }
 }

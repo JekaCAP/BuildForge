@@ -14,3 +14,14 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
+
+kafka:
+  host: "localhost:9092"
+  topics:
+    users:
+      created: user-created-topic
+      deleted: user-deleted-topic
+  group:
+    users:
+      created: user-created-group
+      deleted: user-deleted-group

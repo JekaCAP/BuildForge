@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ru.open.source.service.UserService;
+import ru.open.source.service.user.UserService;
 import ru.opensource.buildforge.generated.api.UsersApiDelegate;
 import ru.opensource.buildforge.generated.dto.CreateUserDto;
 import ru.opensource.buildforge.generated.dto.UpdateUserDto;
