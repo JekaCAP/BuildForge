@@ -1,7 +1,10 @@
 package ru.open.source.entity;
 
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -14,7 +17,10 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -42,7 +48,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@RequiredArgsConstructor
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
@@ -65,8 +70,10 @@ public class Profile {
 
     private String bio;
 
+    @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
-    private String setting;
+    private Map<String, Object> setting = new HashMap<>();
 
-    private ProfileStatus status;
+    @Enumerated(EnumType.STRING)
+    private ProfileStatus status = ProfileStatus.PENDING;
 }

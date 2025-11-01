@@ -65,7 +65,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@RequiredArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
 public class User {

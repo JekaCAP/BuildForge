@@ -42,6 +42,12 @@
             <version>2.2.14</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+
         <!-- Jackson support for JsonNullable -->
         <dependency>
             <groupId>org.openapitools</groupId>
@@ -55,6 +61,14 @@
             <artifactId>jakarta.annotation-api</artifactId>
             <version>2.1.1</version>
         </dependency>
+
+        <!-- Spring boot Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -73,12 +87,13 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
+                            <!-- Путь к спецификации OpenAPI -->
                             <inputSpec>${project.basedir}/../api-specs/target/openapi/@typespec/openapi3/openapi.yaml</inputSpec>
 
                             <!-- Генерация сразу в src/main/java внутри target -->
                             <output>${project.build.directory}/generated-sources/openapi</output>
 
-                            <!-- Пакеты -->
+                            <!-- Пакеты для сгенерированных классов -->
                             <apiPackage>ru.opensource.buildforge.generated.api</apiPackage>
                             <modelPackage>ru.opensource.buildforge.generated.dto</modelPackage>
                             <invokerPackage>ru.opensource.buildforge.generated.invoker</invokerPackage>
@@ -91,9 +106,16 @@
                                 <delegatePattern>true</delegatePattern>
                                 <!-- Генерировать контроллеры полностью, не только интерфейсы -->
                                 <interfaceOnly>false</interfaceOnly>
+                                <!-- Используем Spring Boot 3 -->
                                 <useSpringBoot3>true</useSpringBoot3>
+                                <!-- Библиотека для работы с датами -->
                                 <dateLibrary>java8</dateLibrary>
+                                <!-- Не генерировать вспомогательные файлы -->
                                 <generateSupportingFiles>false</generateSupportingFiles>
+                                <!-- НЕ генерировать тесты для API -->
+                                <generateApiTests>false</generateApiTests>
+                                <!-- НЕ генерировать тесты для моделей -->
+                                <generateModelTests>false</generateModelTests>
                             </configOptions>
                         </configuration>
                     </execution>

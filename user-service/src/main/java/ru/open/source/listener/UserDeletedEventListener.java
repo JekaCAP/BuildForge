@@ -25,19 +25,18 @@ import java.util.UUID;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class UserDeletedEventListener implements MessageListener<String, String> {
+public class UserDeletedEventListener {
 
     private final ObjectMapper objectMapper;
     private final ProfileServiceImpl profileService;
 
-    @Override
     @KafkaListener(topics = "${kafka.topics.users.deleted}",
             groupId = "${kafka.group.users.deleted}",
             containerFactory = "kafkaListenerContainerFactory")
     public void onMessage(ConsumerRecord<String, String> record) {
         try {
             var event = objectMapper.readValue(record.value(), UserDeletedEvent.class);
-            UUID userId = event.getUserId();
+            UUID userId = event.userId();
             profileService.delete(userId);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Ошибка при десериализации сообщения", e);

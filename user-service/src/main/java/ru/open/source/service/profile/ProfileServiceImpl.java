@@ -29,18 +29,16 @@ public class ProfileServiceImpl implements ProfileService {
         var user = userRepository.getByIdOrThrow(userId);
         Profile profile = Profile.builder()
                 .user(user)
-                .status(ProfileStatus.PENDING)
                 .build();
         profileRepository.save(profile);
     }
 
     @Transactional
     @Override
-    public ProfileResponse update(UUID userId, UpdateProfileDto profileDto) {
-        var user = userRepository.getByIdOrThrow(userId);
-        var profile = user.getProfile();
-
-        mapper.updateProfile(profile, profileDto);
+    public ProfileResponse update(UUID userId, UpdateProfileDto dto) {
+        var profile = userRepository.getByIdOrThrow(userId).getProfile();
+        mapper.updateProfile(profile, dto);
+        profileRepository.save(profile);
         return mapper.toProfileResponse(profile);
     }
 
@@ -55,7 +53,8 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public void delete(UUID userId) {
         var profile = userRepository.getByIdOrThrow(userId).getProfile();
-        profileRepository.delete(profile);
-        log.info("Удален профиль с id: {}", profile.getId());
+        profile.setStatus(ProfileStatus.DELETED);
+        log.info("Статус профиля изменён на удалённый с id: {}", profile.getId());
+        profileRepository.save(profile);
     }
 }

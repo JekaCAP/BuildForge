@@ -18,6 +18,7 @@ import java.util.UUID;
  * @since 01.11.2025
  */
 public interface ProfileRepository extends JpaRepository<Profile, UUID> {
+
     default Profile getByIdOrThrow(UUID id) {
         return findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Profile with id '%s' not found", id)));

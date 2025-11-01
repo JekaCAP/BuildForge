@@ -1,9 +1,12 @@
 package ru.open.source.service.user;
 
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.open.source.entity.Profile;
+import ru.open.source.entity.ProfileStatus;
 import ru.open.source.entity.User;
 import ru.open.source.event.UserDeletedEvent;
 import ru.open.source.mapper.UserMapper;
@@ -13,6 +16,7 @@ import ru.opensource.buildforge.generated.dto.CreateUserDto;
 import ru.opensource.buildforge.generated.dto.UpdateUserDto;
 import ru.opensource.buildforge.generated.dto.UserResponse;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 @Slf4j
@@ -21,19 +25,30 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserDeletedEventPublisher deletedEventPublisher;
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @Override
     @Transactional
     public UserResponse create(CreateUserDto createUserDto) {
-
         var user = userMapper.toEntity(createUserDto);
+
+        user.setHashedPassword(passwordEncoder.encode(createUserDto.getPassword()));
+
+        Profile profile = Profile.builder()
+                .user(user)
+                .avatar(createUserDto.getProfile() != null ? createUserDto.getProfile().getAvatar() : null)
+                .bio(createUserDto.getProfile() != null ? createUserDto.getProfile().getBio() : null)
+                .setting(new HashMap<>())
+                .status(ProfileStatus.PENDING)
+                .build();
+
+        user.setProfile(profile);
 
         userRepository.save(user);
 
         return userMapper.toUserResponse(user);
-
     }
 
     @Override
