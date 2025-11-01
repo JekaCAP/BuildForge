@@ -11,14 +11,13 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import ru.open.source.event.UserCreatedEvent;
-
+import ru.open.source.event.UserDeletedEvent;
 
 /**
- * Kafka-продюсер для отправки событий о создании пользователя.
+ * Kafka-продюсер для отправки событий об удалении пользователя.
  * <p>
- * Использует {@link KafkaTemplate} для сериализации и публикации {@link UserCreatedEvent}
- * в топик, заданный в настройках {@code kafka.topics.users.created}.
+ * Использует {@link KafkaTemplate} для сериализации и публикации {@link UserDeletedEvent}
+ * в топик, заданный в настройках {@code kafka.topics.users.deleted}.
  * </p>
  *
  * @author mrnght
@@ -27,17 +26,17 @@ import ru.open.source.event.UserCreatedEvent;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class UserCreatedEventPublisher {
+public class UserDeletedEventPublisher {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    @Value(value = "${kafka.topics.users.created}")
+    @Value(value = "${kafka.topics.users.deleted}")
     private String topicName;
 
     @Async
     @Retryable(retryFor = {TimeoutException.class, SerializationException.class, AuthorizationException.class},
             maxAttempts = 3, backoff = @Backoff(delay = 1000, multiplier = 2))
-    public void publish(UserCreatedEvent event) {
+    public void publish(UserDeletedEvent event) {
         kafkaTemplate.send(topicName, event);
     }
 }

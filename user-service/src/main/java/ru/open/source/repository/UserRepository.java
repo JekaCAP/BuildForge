@@ -13,8 +13,8 @@ import java.util.UUID;
  * пользователей в БД
  * </p>
  *
- * @author agent
- * @since 28.10.2025
+ * @author mrnght
+ * @since 31.10.2025
  */
 public interface UserRepository extends JpaRepository<User, UUID> {
 

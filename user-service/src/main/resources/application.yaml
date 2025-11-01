@@ -20,6 +20,8 @@ kafka:
   topics:
     users:
       created: user-created-topic
+      deleted: user-deleted-topic
   group:
     users:
       created: user-created-group
+      deleted: user-deleted-group
