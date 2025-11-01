@@ -34,4 +34,16 @@ public class UsersApiDelegateImpl implements UsersApiDelegate {
         return ResponseEntity.ok(response);
     }
 
+    @Override
+    public ResponseEntity<UserResponse> userApiGetUser(String userId) {
+        var response = service.getById(UUID.fromString(userId));
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<Void> userApiDeleteUser(String userId) {
+        service.delete(UUID.fromString(userId));
+        log.info("Delete user with id: {}", userId);
+        return ResponseEntity.ok().build();
+    }
 }
