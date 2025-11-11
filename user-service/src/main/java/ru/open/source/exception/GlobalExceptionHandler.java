@@ -20,22 +20,25 @@ import java.util.stream.Collectors;
  *
  * <p>Обрабатывает различные исключения, возникающие во время выполнения запросов, и возвращает
  * клиенту стандартизированные ответы с информацией об ошибках в формате JSON.
- * Это помогает унифицировать обработку ошибок и улучшить качество взаимодействия API с клиентами.</p>
+ * Это помогает унифицировать обработку ошибок и улучшить взаимодействие API с клиентами.</p>
  *
  * <p>В данном классе реализованы обработчики для:
  * <ul>
- *     <li>Некорректного формата JSON в запросах (HttpMessageNotReadableException)</li>
+ *     <li>Некорректных аргументов методов (IllegalArgumentException)</li>
+ *     <li>Ошибок формата JSON (HttpMessageNotReadableException)</li>
  *     <li>Ошибок валидации данных (@Valid) (MethodArgumentNotValidException)</li>
  *     <li>Случаев, когда ресурс не найден (EntityNotFoundException)</li>
- *     <li>Доступ запрещён (ForbiddenException)</li>
- *     <li>Ошибок валидации данных на уровне бизнес-логики (DataValidationException)</li>
- *     <li>Неавторизованного доступа (UnauthorizedException)</li>
- *     <li>Ошибок генерации картинок</li>
+ *     <li>Ошибок генерации аватаров (AvatarGenerateException)</li>
+ *     <li>Доступа без прав (ForbiddenException)</li>
+ *     <li>Бизнес-ошибок валидации (DataValidationException)</li>
+ *     <li>Некорректных HTTP-методов (HttpRequestMethodNotSupportedException)</li>
+ *     <li>Неавторизованных запросов (UnauthorizedException)</li>
+ *     <li>Ошибок валидации профиля (ProfileValidationException)</li>
  *     <li>И любых других необработанных исключений (Exception)</li>
  * </ul>
  * </p>
  *
- * <p>Каждый обработчик возвращает объект ErrorResponse с HTTP-статусом, сообщением и отметкой времени.</p>
+ * <p>Каждый обработчик возвращает объект {@link ErrorResponse} с HTTP-статусом, сообщением и меткой времени.</p>
  *
  * @author agent
  * @since 28.10.2025
@@ -151,5 +154,15 @@ public class GlobalExceptionHandler {
                 Instant.now().truncatedTo(ChronoUnit.SECONDS).toString()
         );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(ProfileValidationException.class)
+    public ResponseEntity<ErrorResponse> handleProfileValidation(ProfileValidationException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                Instant.now().truncatedTo(ChronoUnit.SECONDS).toString()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }

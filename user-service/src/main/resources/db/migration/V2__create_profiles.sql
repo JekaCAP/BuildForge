@@ -1,8 +1,8 @@
 CREATE TABLE profiles (
-    id UUID PRIMARY KEY,
-    user_id UUID NOT NULL UNIQUE,
-    avatar VARCHAR(255),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+    avatar TEXT,
     bio TEXT,
     setting JSONB,
-    CONSTRAINT fk_profiles_user FOREIGN KEY(user_id) REFERENCES users(id)
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING'
 );

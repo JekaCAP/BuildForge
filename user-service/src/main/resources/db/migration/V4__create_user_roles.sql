@@ -1,5 +1,5 @@
 CREATE TABLE user_roles (
-    user_id UUID NOT NULL,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     role VARCHAR(50) NOT NULL,
-    CONSTRAINT fk_userroles_user FOREIGN KEY(user_id) REFERENCES users(id)
+    PRIMARY KEY (user_id, role)
 );

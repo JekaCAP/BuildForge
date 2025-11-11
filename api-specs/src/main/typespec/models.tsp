@@ -19,7 +19,7 @@ model User {
   createdAt?: utcDateTime;
   updatedAt?: utcDateTime;
   profile?: Profile;
-  roles?: RoleName[];
+  roles?: UserRole[];
 }
 
 @doc("Сборки пользователя")

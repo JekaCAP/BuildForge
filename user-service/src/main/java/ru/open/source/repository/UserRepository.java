@@ -2,6 +2,7 @@ package ru.open.source.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.open.source.entity.User;
+import ru.open.source.exception.DataValidationException;
 import ru.open.source.exception.EntityNotFoundException;
 
 import java.util.UUID;
@@ -20,8 +21,22 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     default User getByIdOrThrow(UUID id) {
         return findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("User with id '%s' not found", id)));
+                .orElseThrow(() -> new EntityNotFoundException("User with id '%s' not found".formatted(id)));
     }
 
-    UUID id(UUID id);
+    boolean existsByEmail(String email);
+
+    boolean existsByUsername(String username);
+
+    default void validateEmailNotExists(String email) {
+        if (existsByEmail(email)) {
+            throw new DataValidationException("User with email '%s' already exists".formatted(email));
+        }
+    }
+
+    default void validateUsernameNotExists(String username) {
+        if (existsByUsername(username)) {
+            throw new DataValidationException("User with username '%s' already exists".formatted(username));
+        }
+    }
 }

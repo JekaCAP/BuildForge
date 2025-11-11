@@ -26,7 +26,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author agent
  * @since 21.10.2025
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+        "ru.open.source",
+        "ru.opensource.buildforge.generated.api"
+})
 public class UserServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(UserServiceApplication.class, args);

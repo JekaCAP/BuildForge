@@ -1,7 +1,7 @@
 import "@typespec/openapi3";
 
 @doc("Роль пользователя в системе")
-enum RoleName {
+enum UserRole {
   ROLE_USER,
   ROLE_ADMIN
 }
@@ -27,7 +27,7 @@ model UserResponse {
   username: string;
   email?: string;
   createdAt: utcDateTime;
-  roles?: RoleName[];
+  roles?: UserRole[];
   profile?: ProfileResponse;
 }
 
