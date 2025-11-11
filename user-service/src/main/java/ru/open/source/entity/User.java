@@ -5,7 +5,6 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
@@ -19,12 +18,12 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -92,7 +91,7 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Profile profile;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -115,9 +114,19 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public Profile getProfile() {
-        if (profile == null)
-            throw new EntityNotFoundException("Profile is not found");
-        return profile;
+    public Optional<Profile> findProfile() {
+        return Optional.ofNullable(profile);
+    }
+
+    public void addRole(RoleName role) {
+        this.roles.add(role);
+    }
+
+    public void removeRole(RoleName role) {
+        this.roles.remove(role);
+    }
+
+    public boolean hasRole(RoleName role) {
+        return this.roles.contains(role);
     }
 }

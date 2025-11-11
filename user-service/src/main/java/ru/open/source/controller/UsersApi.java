@@ -15,7 +15,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UsersApiDelegateImpl implements UsersApiDelegate {
+public class UsersApi implements UsersApiDelegate {
 
     private final UserService service;
 

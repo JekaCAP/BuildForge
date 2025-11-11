@@ -39,8 +39,20 @@ public interface ProfileService {
     ProfileResponse update(UUID userId, UpdateProfileDto profileDto);
 
     /**
-     * Удаляет профиль по идентификатору пользователя
+     * Меняем статус профиля по идентификатору пользователя на удалённый
      * @param userId уникальный идентификатор пользователя
      */
     void delete(UUID userId);
+
+    /**
+     * Удаляет профиль по идентификатору пользователя
+     * @param userId уникальный идентификатор пользователя
+     */
+    void hardDelete(UUID userId);
+
+    /**
+     * Меняем статус профиля по идентификатору пользователя на активный
+     * @param userId уникальный идентификатор пользователя
+     */
+    void restore(UUID userId);
 }

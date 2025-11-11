@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.open.source.entity.Profile;
-import ru.open.source.entity.ProfileStatus;
 import ru.open.source.mapper.ProfileMapper;
 import ru.open.source.repository.ProfileRepository;
 import ru.open.source.repository.UserRepository;
@@ -26,35 +25,54 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional
     @Override
     public void create(UUID userId) {
+        profileRepository.validateUserHasNoProfile(userId);
         var user = userRepository.getByIdOrThrow(userId);
-        Profile profile = Profile.builder()
-                .user(user)
-                .build();
+
+        Profile profile = Profile.create(user);
         profileRepository.save(profile);
+        log.info("Created profile for user: {}", userId);
     }
 
     @Transactional
     @Override
     public ProfileResponse update(UUID userId, UpdateProfileDto dto) {
-        var profile = userRepository.getByIdOrThrow(userId).getProfile();
+        var profile = profileRepository.getActiveProfileByUserId(userId);
         mapper.updateProfile(profile, dto);
         profileRepository.save(profile);
+        log.info("Updated profile for user: {}", userId);
         return mapper.toProfileResponse(profile);
     }
 
     @Transactional(readOnly = true)
     @Override
     public ProfileResponse get(UUID userId) {
-        var profile = userRepository.getByIdOrThrow(userId).getProfile();
+        var profile = profileRepository.getActiveProfileByUserId(userId);
         return mapper.toProfileResponse(profile);
     }
 
     @Transactional
     @Override
     public void delete(UUID userId) {
-        var profile = userRepository.getByIdOrThrow(userId).getProfile();
-        profile.setStatus(ProfileStatus.DELETED);
-        log.info("Статус профиля изменён на удалённый с id: {}", profile.getId());
+        var profile = profileRepository.getActiveProfileByUserId(userId);
+        profile.markAsDeleted();
         profileRepository.save(profile);
+        log.info("Soft deleted profile for user: {}", userId);
+    }
+
+    @Transactional
+    @Override
+    public void hardDelete(UUID userId) {
+        var profile = profileRepository.getByUserIdOrThrow(userId);
+        profileRepository.delete(profile);
+        log.info("Hard deleted profile for user: {}", userId);
+    }
+
+    @Transactional
+    @Override
+    public void restore(UUID userId) {
+        var profile = profileRepository.getDeletedProfileByUserId(userId);
+        profile.markAsPending();
+        profileRepository.save(profile);
+        log.info("Restored profile for user: {}", userId);
     }
 }

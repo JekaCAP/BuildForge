@@ -5,17 +5,17 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
@@ -36,6 +36,7 @@ import java.util.UUID;
  *     <li>{@code avatar} — URL или путь к аватару пользователя.</li>
  *     <li>{@code bio} — краткая биография или описание пользователя.</li>
  *     <li>{@code setting} — JSONB-колонка для хранения настроек профиля в формате JSON.</li>
+ *     <li>{@code status} — статус профиля в системе.</li>
  * </ul>
  * </p>
  * <p>
@@ -46,11 +47,10 @@ import java.util.UUID;
  * @since 21.10.2025
  */
 @Getter
-@Setter
 @Entity
-@NoArgsConstructor
 @Builder
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "profiles")
 public class Profile {
 
@@ -62,7 +62,7 @@ public class Profile {
     )
     private UUID id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -72,8 +72,83 @@ public class Profile {
 
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
+    @Builder.Default
     private Map<String, Object> setting = new HashMap<>();
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private ProfileStatus status = ProfileStatus.PENDING;
+
+    public void markAsDeleted() {
+        this.status = ProfileStatus.DELETED;
+    }
+
+    public void markAsPending() {
+        this.status = ProfileStatus.PENDING;
+    }
+
+    public void markAsValid() {
+        this.status = ProfileStatus.VALID;
+    }
+
+    public void markAsInvalid() {
+        this.status = ProfileStatus.INVALID;
+    }
+
+    public boolean isDeleted() {
+        return this.status == ProfileStatus.DELETED;
+    }
+
+    public boolean isActive() {
+        return this.status == ProfileStatus.VALID || this.status == ProfileStatus.PENDING;
+    }
+
+    public boolean isValid() {
+        return this.status == ProfileStatus.VALID;
+    }
+
+    public boolean isPending() {
+        return this.status == ProfileStatus.PENDING;
+    }
+
+    public void updateAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public void updateBio(String bio) {
+        this.bio = bio;
+    }
+
+    public void updateSettings(Map<String, Object> settings) {
+        this.setting = settings != null ? new HashMap<>(settings) : new HashMap<>();
+    }
+
+    public void mergeSettings(Map<String, Object> newSettings) {
+        if (newSettings != null) {
+            if (this.setting == null) {
+                this.setting = new HashMap<>();
+            }
+            this.setting.putAll(newSettings);
+        }
+    }
+
+    public static Profile create(User user) {
+        return Profile.builder()
+                .user(user)
+                .avatar(null)
+                .bio(null)
+                .setting(new HashMap<>())
+                .status(ProfileStatus.PENDING)
+                .build();
+    }
+
+    public static Profile create(User user, String avatar, String bio) {
+        return Profile.builder()
+                .user(user)
+                .avatar(avatar)
+                .bio(bio)
+                .setting(new HashMap<>())
+                .status(ProfileStatus.PENDING)
+                .build();
+    }
 }

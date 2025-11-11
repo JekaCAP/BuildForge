@@ -6,9 +6,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * SecurityConfig — описание класса.
+ * SecurityConfig - конфигурация безопасности приложения.
  * <p>
- * TODO: добавить описание назначения и поведения класса.
+ * Настраивает компоненты безопасности, такие как кодировщик паролей.
+ * В текущей реализации предоставляет bean {@link PasswordEncoder} для хеширования паролей
+ * с использованием алгоритма BCrypt.
  * </p>
  *
  * @author agent

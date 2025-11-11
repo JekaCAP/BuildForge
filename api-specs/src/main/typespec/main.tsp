@@ -40,6 +40,12 @@ namespace UserService {
 
     @delete @route("/profiles/{userId}")
     deleteProfile(@path userId: string): void;
+
+    @delete @route("/profiles/{userId}/hard")
+    hardDeleteProfile(@path userId: string): void;
+
+    @post @route("/profiles/{userId}/restore")
+    restoreProfile(@path userId: string): ProfileResponse;
   }
 
   @tag("UserBuilds")
